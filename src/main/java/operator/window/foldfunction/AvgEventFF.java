@@ -4,7 +4,6 @@ import model.Event;
 import org.apache.flink.api.common.functions.FoldFunction;
 import org.apache.flink.api.java.tuple.Tuple4;
 
-// evento, contatore, distanza, timestamp start, timestamp stop
 // questa classe implementa la fold che ci permetterà di calcolare la media della velocità di ogni sensore.
 
 public class AvgEventFF implements FoldFunction<Event, Tuple4<Long, Long,Event,Long>> {
