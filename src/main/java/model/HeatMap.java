@@ -8,6 +8,7 @@ public class HeatMap implements Cloneable{
 
     public HeatMap(long cell_id, double percentage){
         this.cell_id=cell_id;
+        this.percentage=percentage;
     }
 
     @Override
