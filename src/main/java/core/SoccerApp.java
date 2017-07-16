@@ -44,31 +44,31 @@ public class SoccerApp {
         // Media giocatori per un minuto
         WindowedStream playerWindowedStream1m = avgEventStream1m.keyBy(new PlayerKey()).timeWindow(Time.milliseconds(60000));
         SingleOutputStreamOperator avgPlayerStream1m = playerWindowedStream1m.fold(new Tuple2<>(null, 0L), new AvgSpeedPlayerFF(), new AvgPlayerWF());
-        avgPlayerStream1m.writeAsText("STATISTICHE1M");
+      //  avgPlayerStream1m.writeAsText("STATISTICHE1M");
 
         //Media giocatori per 5 minuti
         WindowedStream playerWindowedStream5m = avgPlayerStream1m.keyBy(new PlayerIdKey()).timeWindow(Time.milliseconds(300000));
         SingleOutputStreamOperator avgPlayerStream5m = playerWindowedStream5m.fold(new Tuple2<>(null, 0L), new AvgPlayerFF(), new AvgPlayerWF());
-        avgPlayerStream5m.writeAsText("STATISTICHE5M");
+        //avgPlayerStream5m.writeAsText("STATISTICHE5M");
 
         //Media giocatori per tutta la partita
         WindowedStream playerWindowedStreamTotal = avgPlayerStream5m.keyBy(new PlayerIdKey()).timeWindow(Time.milliseconds(Configuration.MATCH_DURATION + 300000));
         SingleOutputStreamOperator avgPlayerStreamTotal = playerWindowedStreamTotal.fold(new Tuple2<>(null, 0L), new AvgPlayerFF(), new AvgPlayerWF());
-        avgPlayerStreamTotal.writeAsText("STATISTICHETOT");
+       // avgPlayerStreamTotal.writeAsText("STATISTICHETOT");
 
         ///QUERY 2, CLASSIFICA 5 GIOCATORI PIù VELOCI
 
         //Classifica 1 minuto
         SingleOutputStreamOperator rankWindowedStream1m = avgPlayerStream1m.timeWindowAll(Time.milliseconds(60000)).fold(null, new PlayerRankFF(5), new PlayerRankerAWF());
-        rankWindowedStream1m.writeAsText("CLASSIFICA1M").setParallelism(1);
+       // rankWindowedStream1m.writeAsText("CLASSIFICA1M").setParallelism(1);
 
         //Classifica 5 minuti
         SingleOutputStreamOperator rankWindowedStream5m = avgPlayerStream5m.timeWindowAll(Time.milliseconds(300000)).fold(null, new PlayerRankFF(5), new PlayerRankerAWF());
-        rankWindowedStream5m.writeAsText("CLASSIFICA5M").setParallelism(1);
+      //  rankWindowedStream5m.writeAsText("CLASSIFICA5M").setParallelism(1);
 
         //Classifica totale
         SingleOutputStreamOperator rankWindowedStreamTotal = avgPlayerStreamTotal.timeWindowAll(Time.milliseconds(Configuration.MATCH_DURATION + 300000)).fold(null, new PlayerRankFF(5), new PlayerRankerAWF());
-        rankWindowedStreamTotal.writeAsText("CLASSIFICATOT").setParallelism(1);
+        //rankWindowedStreamTotal.writeAsText("CLASSIFICATOT").setParallelism(1);
 
 
         // QUERY3, PERCENTUALE DI OCCUPAZIONE DEL CAMPO PER GIOCATORE
@@ -76,12 +76,12 @@ public class SoccerApp {
         //Percentuale per 1 minuto
         WindowedStream occWindowedStream1m = filteredById.keyBy(new PlayerEventKey()).timeWindow(Time.milliseconds(60000));
         SingleOutputStreamOperator percentageStream1m = occWindowedStream1m.fold(new Tuple4<>(0L, null, null, 0L), new PercOccFF(), new PercOccWF());
-        percentageStream1m.writeAsText("OCCUPAZIONE1M");
+        //percentageStream1m.writeAsText("OCCUPAZIONE1M");
 
         //Percentuale per tutta la partita
         WindowedStream occWindowedStreamTot = filteredById.keyBy(new PlayerEventKey()).timeWindow(Time.milliseconds(Configuration.MATCH_DURATION + 300000));
         SingleOutputStreamOperator percentageStreamTot = occWindowedStreamTot.fold(new Tuple4<>(0L, null, null, 0L), new PercOccFF(), new PercOccWF());
-        percentageStreamTot.writeAsText("OCCUPAZIONETOT");
+       // percentageStreamTot.writeAsText("OCCUPAZIONETOT");
 
         env.execute("SoccerApp");
     }

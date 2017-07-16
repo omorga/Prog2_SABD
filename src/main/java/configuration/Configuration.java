@@ -15,5 +15,5 @@ public class Configuration {
     public static long NUM_CELL_Y= 13L;
     public static long STEPS_Y= ((Math.abs(Y_MIN)+Math.abs(Y_MAX))/Math.abs(NUM_CELL_Y));
     public static long STEPS_X= ((Math.abs(X_MIN)+Math.abs(X_MAX))/Math.abs(NUM_CELL_X));
-    public static String DATASET_FILE = "C:/Users/morga/Desktop/SABD/Dataset/full-game";
+    public static String DATASET_FILE = " /home/ec2-user/full-game";
 }
